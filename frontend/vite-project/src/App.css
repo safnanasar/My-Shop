@@ -1,0 +1,64 @@
+
+
+html, body, #root {
+  height: 100%;
+  min-height: 100vh;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: rgb(163, 203, 242);
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #3410e7;
+  box-shadow: 0 2px 5px rgba(23, 29, 84, 0.39);
+}
+
+
+.logo {
+  text-decoration: none;
+  color: black;
+}
+
+
+.nav-links a {
+  text-decoration: none;
+  color: black;
+  margin: 0 10px;
+  font-weight: bold;
+  transition: color 0.2s ease;
+}
+
+
+.nav-links a:hover {                                              
+  color: blue;
+}
+
+.container {
+  width: 100%;        
+  padding: 20px;
+  min-height: calc(100vh - 61px);
+}
+
+
+.welcome-text {
+  margin: 0 10px;
+  font-weight: bold;
+}
+
+.logout-btn {
+  padding: 6px 10px;
+  border: none;
+  background: rgba(233, 37, 37, 0.912);
+  color: black;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logout-btn:active {
+  transform: scale(0.95);
+}
