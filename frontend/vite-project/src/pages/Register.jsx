@@ -55,7 +55,7 @@ function Register() {
 
   return (
     <div className="auth-container">
-      <form className="auth-box" onSubmit={handleRegister}>
+      <form className="auth-box register-box" onSubmit={handleRegister}>
         <h2>Register</h2>
 
         <input

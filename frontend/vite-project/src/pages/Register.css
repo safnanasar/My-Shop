@@ -65,3 +65,15 @@
 .auth-switch a:hover {
   text-decoration: underline;
 }
+/* Register uses Login.css as base — only overrides here */
+
+/* Slightly taller box for extra fields */
+.auth-box.register-box {
+  max-width: 440px;
+  padding: 40px 40px;
+}
+
+/* Tighten gap slightly for 5 fields */
+.auth-box.register-box input {
+  padding: 11px 16px;
+}

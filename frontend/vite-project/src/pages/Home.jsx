@@ -1,45 +1,15 @@
 import ProductCard from "../components/ProductCard";
 import "./Home.css";
 
-// Define categories here if not passed from parent
-const DEFAULT_CATEGORIES = ["All", "Electronics", "Jewelleries", "Cosmetics", "Gents", "Ladies"];
-
-function Home({
-  products,
-  categories = DEFAULT_CATEGORIES,
-  selectedCategory,
-  setSelectedCategory,
-  searchTerm,
-  addToCart,
-}) {
+function Home({ products, searchTerm, addToCart }) {
   return (
     <div className="home-container">
-      <div className="categories-container">
-        {categories?.map((category) => (
-          <button
-            key={category}
-            className={`category-btn ${
-              selectedCategory === category ? "active" : ""
-            }`}
-            onClick={() => setSelectedCategory(category)}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-
-      {/* Products Section */}
       <section className="products-section">
         <div className="products-header">
-          <h2 className="home-title">
-            {selectedCategory === "All"
-              ? "Products"
-              : `${selectedCategory} Products`}
-          </h2>
-
+          <h2 className="home-title">Our Collection</h2>
           {searchTerm && (
             <p className="search-result-text">
-              Search results for: <strong>"{searchTerm}"</strong>
+              Showing results for: <strong>"{searchTerm}"</strong>
             </p>
           )}
         </div>
@@ -56,7 +26,9 @@ function Home({
           </div>
         ) : (
           <div className="no-products">
+            <div className="no-products-icon">🔍</div>
             <h3>No products found</h3>
+            <p>Try searching for something else</p>
           </div>
         )}
       </section>

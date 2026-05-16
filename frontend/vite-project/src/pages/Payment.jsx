@@ -7,10 +7,7 @@ function Payment() {
   const navigate = useNavigate();
 
   const handlePayment = () => {
-    // Save selected payment method if needed
     localStorage.setItem("paymentMethod", method);
-
-    // Redirect to success page
     navigate("/success");
   };
 
@@ -22,38 +19,48 @@ function Payment() {
 
   return (
     <div className="payment-container">
-      <h2>Select Payment Method</h2>
+      <div className="payment-card">
+        <h2 className="payment-title">Payment Method</h2>
+        <p className="payment-subtitle">Choose how you'd like to pay</p>
 
-      <div className="payment-options">
-        <label>
-          <input
-            type="radio"
-            value="cod"
-            checked={method === "cod"}
-            onChange={(e) => setMethod(e.target.value)}
-          />
-          Cash on Delivery
-        </label>
+        <div className="payment-options">
+          <label className={`payment-option ${method === "cod" ? "selected" : ""}`}>
+            <input
+              type="radio"
+              value="cod"
+              checked={method === "cod"}
+              onChange={(e) => setMethod(e.target.value)}
+            />
+            <div className="option-icon">🚚</div>
+            <div className="option-info">
+              <span className="option-title">Cash on Delivery</span>
+              <span className="option-desc">Pay when your order arrives</span>
+            </div>
+          </label>
 
-        <label>
-          <input
-            type="radio"
-            value="card"
-            checked={method === "card"}
-            onChange={(e) => setMethod(e.target.value)}
-          />
-          Card Payment
-        </label>
-      </div>
+          <label className={`payment-option ${method === "card" ? "selected" : ""}`}>
+            <input
+              type="radio"
+              value="card"
+              checked={method === "card"}
+              onChange={(e) => setMethod(e.target.value)}
+            />
+            <div className="option-icon">💳</div>
+            <div className="option-info">
+              <span className="option-title">Card Payment</span>
+              <span className="option-desc">Pay securely with your card</span>
+            </div>
+          </label>
+        </div>
 
-      <div className="payment-actions">
-        <button className="cancel-btn" onClick={handleCancel}>
-          Cancel Order
-        </button>
-
-        <button className="pay-btn" onClick={handlePayment}>
-          Place Order
-        </button>
+        <div className="payment-actions">
+          <button className="cancel-btn" onClick={handleCancel}>
+            Cancel Order
+          </button>
+          <button className="pay-btn" onClick={handlePayment}>
+            Place Order
+          </button>
+        </div>
       </div>
     </div>
   );
