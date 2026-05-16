@@ -1,57 +1,123 @@
-
-
+/* Product Card */
 .product-card {
-  border: 1px solid #4822de;
-  padding: 15px;
-  margin: 15px;
-  border-radius: 12px;
-  width: 220px;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(32, 22, 107, 0.45);
-  background-color: white;
+  background: #ffffff;
+  border: 1px solid #dbeafe;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.08);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 28px rgba(37, 99, 235, 0.16);
+}
+
+/* Product Image */
+.product-image-wrapper {
+  background: linear-gradient(to bottom, #eff6ff, #ffffff);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height:220px;
+  border-bottom: 1px solid #dbeafe;
+}
 
 .product-image {
   width: 100%;
-  height: 100px;
+  max-width: 150px;
+  max-height: 150px;
   object-fit: contain;
-  background-color: #f5f5f5;
-  border-radius: 10px;
+  transition: transform 0.3s ease;
+  
 }
 
-
-.product-name {
-  font-size: 18px;
-  margin: 10px 0;
+.product-card:hover .product-image {
+  transform: scale(1.05);
 }
 
+/* Content Area */
+.product-content {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
 
-.product-price {
-  font-weight: bold;
+/* Category Badge */
+.product-category {
+  display: inline-block;
+  align-self: flex-start;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 999px;
   margin-bottom: 10px;
+  text-transform: capitalize;
 }
 
+/* Product Name */
+.product-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  min-height: 50px;
+}
 
+/* Product Description */
+.product-description {
+  font-size: 0.88rem;
+  color: #64748b;
+  line-height: 1.5;
+  margin-bottom: 14px;
+  flex: 1;
+}
+
+/* Price */
+.product-price {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #2563eb;
+  margin-bottom: 14px;
+}
+
+/* Add to Cart Button */
 .add-cart-btn {
-  width: 50%;
-  background-color: #3498db;
-  color: black;
-  padding: 10px;
+  width: 100%;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  padding: 12px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.2);
+  margin-top: auto;
 }
-
 
 .add-cart-btn:hover {
-  background-color: #2980b9;
+  opacity: 0.95;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.28);
 }
-
 
 .add-cart-btn:active {
-  transform: scale(0.95);
-  background-color: #1f6690;
+  transform: scale(0.97);
 }
-
+  .product-price {
+    font-size: 1.2rem;
+  }

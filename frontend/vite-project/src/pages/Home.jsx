@@ -1,30 +1,65 @@
 import ProductCard from "../components/ProductCard";
 import "./Home.css";
 
-function Home({ products, addToCart }) {
+// Define categories here if not passed from parent
+const DEFAULT_CATEGORIES = ["All", "Electronics", "Jewelleries", "Cosmetics", "Gents", "Ladies"];
+
+function Home({
+  products,
+  categories = DEFAULT_CATEGORIES,
+  selectedCategory,
+  setSelectedCategory,
+  searchTerm,
+  addToCart,
+}) {
   return (
     <div className="home-container">
-
-     
-      <div className="search-wrapper">
-        <div className="search-box">
-          <i className="fa-solid fa-magnifying-glass search-icon"></i>
-
-          <input
-            placeholder="Search..."
-            className="search-input"
-          />
-        </div>
-      </div>
-
-      <h2 className="home-title">Products</h2>
-
-      <div className="products-container">
-        {products.map((p) => (
-          <ProductCard key={p.id} product={p} addToCart={addToCart} />
+      <div className="categories-container">
+        {categories?.map((category) => (
+          <button
+            key={category}
+            className={`category-btn ${
+              selectedCategory === category ? "active" : ""
+            }`}
+            onClick={() => setSelectedCategory(category)}
+          >
+            {category}
+          </button>
         ))}
       </div>
 
+      {/* Products Section */}
+      <section className="products-section">
+        <div className="products-header">
+          <h2 className="home-title">
+            {selectedCategory === "All"
+              ? "Products"
+              : `${selectedCategory} Products`}
+          </h2>
+
+          {searchTerm && (
+            <p className="search-result-text">
+              Search results for: <strong>"{searchTerm}"</strong>
+            </p>
+          )}
+        </div>
+
+        {products.length > 0 ? (
+          <div className="products-container">
+            {products.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                addToCart={addToCart}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="no-products">
+            <h3>No products found</h3>
+          </div>
+        )}
+      </section>
     </div>
   );
 }

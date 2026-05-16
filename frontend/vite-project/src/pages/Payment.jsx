@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Payment.css";
@@ -8,12 +7,16 @@ function Payment() {
   const navigate = useNavigate();
 
   const handlePayment = () => {
-    // no real payment, just redirect
+    // Save selected payment method if needed
+    localStorage.setItem("paymentMethod", method);
+
+    // Redirect to success page
     navigate("/success");
   };
+
   const handleCancel = () => {
     if (window.confirm("Cancel this order?")) {
-      navigate("/cart"); // go back to cart
+      navigate("/cart");
     }
   };
 
@@ -36,19 +39,21 @@ function Payment() {
           <input
             type="radio"
             value="card"
+            checked={method === "card"}
             onChange={(e) => setMethod(e.target.value)}
           />
           Card Payment
         </label>
       </div>
+
       <div className="payment-actions">
         <button className="cancel-btn" onClick={handleCancel}>
           Cancel Order
         </button>
 
-      <button className="pay-btn" onClick={handlePayment}>
-        Place Order
-      </button>
+        <button className="pay-btn" onClick={handlePayment}>
+          Place Order
+        </button>
       </div>
     </div>
   );

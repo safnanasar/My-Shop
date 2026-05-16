@@ -1,26 +1,54 @@
-
 import "./ProductCard.css";
 
 function ProductCard({ product, addToCart }) {
+  const {
+    name,
+    price,
+    image,
+    category,
+    description,
+  } = product;
+
   return (
     <div className="product-card">
-      
-      <img
-        src={product.image || "https://via.placeholder.com/150"}
-        alt={product.name}
-        className="product-image"
-      />
+      {/* Product Image */}
+      <div className="product-image-wrapper">
+        <img
+          src={image || "https://via.placeholder.com/300x300?text=No+Image"}
+          alt={name}
+          className="product-image"
+        />
+      </div>
 
-      <h3 className="product-name">{product.name}</h3>
+      {/* Product Info */}
+      <div className="product-content">
+        {category && (
+          <span className="product-category">
+            {category}
+          </span>
+        )}
 
-      <p className="product-price">₹{product.price}</p>
+        <h3 className="product-name">{name}</h3>
 
-      <button
-        className="add-cart-btn"
-        onClick={() => addToCart(product )}>
-        Add to Cart
-      </button>
+        {description && (
+          <p className="product-description">
+            {description.length > 70
+              ? `${description.slice(0, 70)}...`
+              : description}
+          </p>
+        )}
 
+        <p className="product-price">
+          ₹{Number(price).toLocaleString("en-IN")}
+        </p>
+
+        <button
+          className="add-cart-btn"
+          onClick={() => addToCart(product)}
+        >
+          Add to Cart
+        </button>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { ShoppingCart } from "lucide-react";
 
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
@@ -14,7 +15,10 @@ function App() {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [user, setUser] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchTerm, setSearchTerm] = useState("");
 
+  // Load logged-in user
   useEffect(() => {
     const savedUser = localStorage.getItem("currentUser");
     if (savedUser) {
@@ -22,6 +26,20 @@ function App() {
     }
   }, []);
 
+  // Load cart from localStorage
+  useEffect(() => {
+    const savedCart = localStorage.getItem("cart");
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
+    }
+  }, []);
+
+  // Save cart to localStorage whenever cart changes
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
+  // Fetch products
   useEffect(() => {
     fetch("https://my-shop-7fuy.onrender.com/api/products/")
       .then((res) => res.json())
@@ -29,53 +47,141 @@ function App() {
       .catch((err) => console.error("Failed to fetch products:", err));
   }, []);
 
-  const addToCart = (product) => {
-    const exists = cart.find((item) => item.id === product.id);
-    if (exists) {
-      setCart(cart.map((item) =>
-        item.id === product.id ? { ...item, qty: item.qty + 1 } : item
-      ));
-    } else {
-      setCart([...cart, { ...product, qty: 1 }]);
-    }
+  // Extract categories dynamically
+  const categories = useMemo(() => {
+    const allCategories = products
+      .map((product) => product.category)
+      .filter(Boolean);
+
+    return ["All", ...new Set(allCategories)];
+  }, [products]);
+
+  // Filter products by category and search
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) => {
+      const matchesCategory =
+        selectedCategory === "All" ||
+        product.category === selectedCategory;
+
+      const matchesSearch = product.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [products, selectedCategory, searchTerm]);
+
+  // Add to cart without duplicates
+  const handleAddToCart = (product) => {
+    setCart((prevCart) => {
+      const existingProduct = prevCart.find(
+        (item) => item.id === product.id
+      );
+
+      if (existingProduct) {
+        // Increase quantity if product already exists
+        return prevCart.map((item) =>
+          item.id === product.id
+            ? {
+                ...item,
+                qty: (item.qty || 1) + 1,
+              }
+            : item
+        );
+      }
+
+      // Add new product with quantity = 1
+      return [
+        ...prevCart,
+        {
+          ...product,
+          qty: 1,
+        },
+      ];
+    });
+
+    alert("Added to cart");
   };
 
+  // Remove item from cart
   const removeFromCart = (index) => {
-    setCart(cart.filter((_, i) => i !== index));
+    setCart((prevCart) =>
+      prevCart.filter((_, i) => i !== index)
+    );
   };
 
+  // Update quantity
   const updateQty = (index, qty) => {
-    const updatedCart = [...cart];
-    updatedCart[index].qty = qty;
-    setCart(updatedCart);
+    if (qty <= 0) {
+      removeFromCart(index);
+      return;
+    }
+
+    setCart((prevCart) => {
+      const updatedCart = [...prevCart];
+      updatedCart[index].qty = qty;
+      return updatedCart;
+    });
+  };
+
+  // Total cart items
+  const cartCount = cart.reduce(
+    (total, item) => total + (item.qty || 1),
+    0
+  );
+
+  // Logout
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser");
+    setUser(null);
   };
 
   return (
     <BrowserRouter>
       <nav className="navbar">
-        <h2>
-          <Link to="/" className="logo">My Store</Link>
-        </h2>
+        <div className="nav-left">
+          <h2>
+            <Link to="/" className="logo">
+              My Store
+            </Link>
+          </h2>
+        </div>
+
+        <div className="nav-center">
+          <input
+            type="text"
+            placeholder="Search products..."
+            className="search-input"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
 
         <div className="nav-links">
           <Link to="/">Home</Link>
-          <Link to="/cart">Cart ({cart.length})</Link>
+
+          <Link to="/cart" className="cart-link">
+            <ShoppingCart size={20} />
+            <span className="cart-count">{cartCount}</span>
+          </Link>
 
           {user ? (
             <>
-              <span className="welcome-text">Welcome, {user}</span>
+              <span className="welcome-text">
+                Welcome, {user}
+              </span>
               <button
                 className="logout-btn"
-                onClick={() => {
-                  localStorage.removeItem("currentUser");
-                  setUser(null);
-                }}
+                onClick={handleLogout}
               >
                 Logout
               </button>
             </>
           ) : (
-            <Link to="/login">Login</Link>
+            <>
+              <Link to="/login">Login</Link>
+              <Link to="/register">Register</Link>
+            </>
           )}
         </div>
       </nav>
@@ -84,8 +190,19 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<Home products={products} addToCart={addToCart} />}
+            element={
+              <Home
+                products={filteredProducts}
+                allProducts={products}
+                categories={categories}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                searchTerm={searchTerm}
+                addToCart={handleAddToCart}
+              />
+            }
           />
+
           <Route
             path="/cart"
             element={
@@ -96,10 +213,26 @@ function App() {
               />
             }
           />
-          <Route path="/payment" element={<Payment cart={cart} />} />
-          <Route path="/login" element={<Login setUser={setUser} />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/success" element={<Success />} />
+
+          <Route
+            path="/payment"
+            element={<Payment cart={cart} />}
+          />
+
+          <Route
+            path="/login"
+            element={<Login setUser={setUser} />}
+          />
+
+          <Route
+            path="/register"
+            element={<Register />}
+          />
+
+          <Route
+            path="/success"
+            element={<Success />}
+          />
         </Routes>
       </div>
     </BrowserRouter>

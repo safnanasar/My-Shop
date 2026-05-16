@@ -1,39 +1,39 @@
 import { useState } from "react";
-import "./Login.css"; 
+import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
 
 function Login({ setUser }) {
   const [input, setInput] = useState(""); // email or phone
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate(); // <-- Missing line
+
   const handleLogin = (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!input || !password) {
-    alert("Please fill all fields");
-    return;
-  }
+    if (!input || !password) {
+      alert("Please fill all fields");
+      return;
+    }
 
-  const users = JSON.parse(localStorage.getItem("users")) || [];
+    const users = JSON.parse(localStorage.getItem("users")) || [];
 
-  const user = users.find(
-    (u) => (u.email === input) && u.password === password
-  );
+    const user = users.find(
+      (u) => u.email === input && u.password === password
+    );
 
-  if (!user) {
-    alert("Invalid credentials");
-    return;
-  }
-  alert(`Welcome ${user.name} 🎉`);
+    if (!user) {
+      alert("Invalid credentials");
+      return;
+    }
 
-setUser(user.name);
+    alert(`Welcome ${user.name} 🎉`);
 
+    setUser(user.name);
+    localStorage.setItem("currentUser", user.name);
 
-localStorage.setItem("currentUser", user.name);
-
-navigate("/");
-  
-};
+    navigate("/");
+  };
 
   return (
     <div className="auth-container">
@@ -55,9 +55,10 @@ navigate("/");
         />
 
         <button type="submit">Login</button>
+
         <p className="auth-switch">
-        Don’t have an account? <Link to="/register">Register</Link>
-    </p>
+          Don’t have an account? <Link to="/register">Register</Link>
+        </p>
       </form>
     </div>
   );
